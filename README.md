@@ -1,6 +1,6 @@
 # PLATO ActiveLog Agent
 
-Fitness Guardian for activelog.ai. Wearable data → PLATO → agent insights.
+Movement & Wellness Logger for activelog.ai. Wearable data → PLATO → health insights.
 
 ## Quick Start
 
