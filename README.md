@@ -19,3 +19,8 @@ print(agent.ask("how's my recovery?"))
 - Wearable data (HRV, sleep, activity) → PLATO tiles
 - Agent reads PLATO → presents wellness checkups
 - "Don the health shell" → load personal health context
+
+## Related
+
+- [activelog.ai](https://activelog.ai) — Live site
+- [activelog-ai-pages](https://github.com/SuperInstance/activelog-ai-pages) — GitHub Pages source
