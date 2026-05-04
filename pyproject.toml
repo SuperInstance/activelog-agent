@@ -6,6 +6,9 @@ name = "activelog-agent"
 version = "0.1.0"
 description = "Fitness Guardian for activelog.ai — wearable health → PLATO → wellness insights"
 requires-python = ">=3.10"
-dependencies = ["requests>=2.28"]
+dependencies = [
+    "fleet-agent>=0.2.0",
+    "requests>=2.28",
+]
 [project.urls]
 Homepage = "https://github.com/SuperInstance/activelog-agent"

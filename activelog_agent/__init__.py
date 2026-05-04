@@ -14,12 +14,14 @@ Usage:
 
 import time
 import requests
+from fleet_agent import BaseAgent
+from fleet_agent.fleet_math import EmergenceDetector, HolonomyConsensus
+
 from typing import Optional
 from dataclasses import dataclass
 
 DEFAULT_PLATO_URL = "http://localhost:8847"
 ROOM = "activelog-ai"
-
 
 class ActiveLogAgent:
     """
@@ -29,11 +31,25 @@ class ActiveLogAgent:
     Agent reads PLATO → presents health trends and insights.
     """
     
-    def __init__(self, user_id: str = "default", plato_url: str = DEFAULT_PLATO_URL):
-        self.user_id = user_id
-        self.plato_url = plato_url.rstrip("/")
-        self.room = ROOM
-    
+        
+    def detect_emergence(self, events: list) -> dict:
+        """Detect emergence via H1 cohomology."""
+        detector = EmergenceDetector()
+        edges = [(events[i], events[i+1]) for i in range(len(events)-1)]
+        detector.update(events, edges)
+        return {"emergence_detected": detector.emergence_detected, "h1_cohomology": detector.h1, "confidence": detector.confidence}
+
+    def check_consensus(self, tile_ids: list[int]) -> bool:
+        """Check holonomy consensus across tiles."""
+        hc = HolonomyConsensus()
+        for tid in tile_ids:
+            hc.add_tile(tid)
+        return hc.check_consensus([tile_ids])
+
+def __init__(self, vessel: str = "activelog-agent", domain: str = ACTIVELOG_AI_ROOM, plato_url: str = "http://localhost:8847"):
+        super().__init__(vessel=vessel, domain=domain, plato_url=plato_url)
+        self.room = domain
+
     def _write(self, metric_type: str, value: float, metadata: dict) -> bool:
         tile = {
             "question": f"health:{self.user_id}:{metric_type}",
