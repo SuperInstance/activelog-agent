@@ -46,7 +46,7 @@ class ActiveLogAgent:
             hc.add_tile(tid)
         return hc.check_consensus([tile_ids])
 
-def __init__(self, vessel: str = "activelog-agent", domain: str = ACTIVELOG_AI_ROOM, plato_url: str = "http://localhost:8847"):
+    def __init__(self, vessel: str = "activelog-agent", domain: str = ROOM, plato_url: str = "http://localhost:8847"):
         super().__init__(vessel=vessel, domain=domain, plato_url=plato_url)
         self.room = domain
 
