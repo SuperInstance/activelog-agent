@@ -1,19 +1,38 @@
 # activelog-agent
 
-Autonomous log monitoring and alerting agent for Python.
+**Autonomous log monitoring and alerting** — pattern matching, threshold alerts, escalation, and state persistence. Pure Python, zero dependencies.
+
+## What This Gives You
+
+- **Pattern matching** — substring, regex, and exact match rules
+- **Threshold alerts** — fire after N matches in a configurable time window
+- **Throttling** — automatic cooldown to prevent alert storms
+- **Escalation** — auto-escalate high-severity rules
+- **Snapshots** — capture surrounding context on match
+- **State persistence** — save/load sessions to JSON
+
+## Installation
+
+```bash
+pip install activelog-agent
+```
 
 ## Quick Start
 
 ```python
 from activelog_agent import Agent, AlertRule, MatchType
 
-# Create an agent with a monitoring session
 agent = Agent()
-rule = AlertRule(name="errors", pattern=r"ERROR|FATAL", match_type=MatchType.REGEX, threshold=3, window_seconds=60)
+rule = AlertRule(
+    name="errors",
+    pattern=r"ERROR|FATAL",
+    match_type=MatchType.REGEX,
+    threshold=3,
+    window_seconds=60,
+)
 session = agent.create_session("prod-monitor", rules=[rule])
 agent.start_session(session.id)
 
-# Feed log lines
 actions = agent.process_lines([
     "2026-05-26 INFO server started",
     "2026-05-26 ERROR connection refused",
@@ -23,38 +42,29 @@ actions = agent.process_lines([
 
 for a in actions:
     print(f"[{a.action_type.value}] {a.message}")
-
-# Persist session state
-session.save("monitoring-state.json")
 ```
 
-## Architecture
+## API Reference
 
 | Module | Purpose |
-|---|---|
+|--------|---------|
 | `agent.py` | Top-level `Agent` orchestrating sessions |
-| `watcher.py` | `LogWatcher` tailing log files and scanning lines |
-| `rule.py` | `AlertRule` with substring, regex, and exact matching + thresholds |
+| `watcher.py` | `LogWatcher` tailing log files |
+| `rule.py` | `AlertRule` with matching + thresholds |
 | `action.py` | `Action` types: notify, escalate, throttle, snapshot |
-| `session.py` | `MonitoringSession` with lifecycle, persistence, and throttle state |
+| `session.py` | `MonitoringSession` with lifecycle + persistence |
 
-## Features
-
-- **Pattern matching** — substring, regex, exact match
-- **Threshold alerts** — fire only after N matches in a time window
-- **Throttling** — automatic cooldown to prevent alert storms
-- **Escalation** — auto-escalate high-threshold rules
-- **Snapshots** — capture context around matching lines
-- **State persistence** — save/load sessions to JSON
-- **Zero dependencies** — stdlib only, pytest for testing
-
-## Development
+## Testing
 
 ```bash
 pip install -e ".[dev]"
-python -m pytest tests/ -v
+pytest
 ```
 
-## Related
+## How It Fits
 
-- [activelog.ai](https://activelog.ai)
+Part of the activelog pipeline: `activelog-agent` monitors → `activelog-backend` stores → `activelog-ai` analyzes fitness data. Runs as a PLATO fleet agent.
+
+## License
+
+MIT
