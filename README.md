@@ -63,7 +63,8 @@ pytest
 
 ## How It Fits
 
-Part of the activelog pipeline: `activelog-agent` monitors → `activelog-backend` stores → `activelog-ai` analyzes fitness data. Runs as a PLATO fleet agent.
+- ✅ **Real today** — a standalone, zero-dependency log-monitoring toolkit. Every feature listed above (pattern matching, thresholds, throttling, escalation, snapshots, state persistence) is implemented and covered by the test suite.
+- 🔮 **Later phase** — integration with a broader `activelog` pipeline (e.g. a separate `activelog-backend` store, downstream analytics) and running as a PLATO fleet agent are aspirational directions, not anything present in this package today.
 
 ## License
 
