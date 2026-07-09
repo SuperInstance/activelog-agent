@@ -1,15 +1,15 @@
 # activelog-agent
 
-**Autonomous log monitoring and alerting** — pattern matching, threshold alerts, escalation, and state persistence. Pure Python, zero dependencies.
+A standalone log-monitoring and alerting toolkit for Python. Define rules that match log lines by substring, regex, or exact text, then process log streams through them to produce notification, escalation, throttle, and snapshot actions. Pure Python, zero runtime dependencies.
 
-## What This Gives You
+## Features
 
-- **Pattern matching** — substring, regex, and exact match rules
-- **Threshold alerts** — fire after N matches in a configurable time window
-- **Throttling** — automatic cooldown to prevent alert storms
-- **Escalation** — auto-escalate high-severity rules
-- **Snapshots** — capture surrounding context on match
-- **State persistence** — save/load sessions to JSON
+- **Pattern matching** — substring, regex, and exact-match rules
+- **Threshold alerts** — fire after N matches within a configurable time window
+- **Throttling** — every rule that fires enters a 60-second cooldown
+- **Escalation** — rules with a threshold of 5 or higher also generate an escalate action
+- **Snapshots** — rules tagged `"snapshot"` capture the matched line as context
+- **State persistence** — save and load sessions to JSON via `MonitoringSession.save()` / `.load()`
 
 ## Installation
 
@@ -44,15 +44,26 @@ for a in actions:
     print(f"[{a.action_type.value}] {a.message}")
 ```
 
+## How It Works
+
+Each log line is checked against every enabled, non-throttled rule in the session. When a rule's pattern matches:
+
+1. A **notify** action is always generated.
+2. If the rule is tagged `"snapshot"`, a **snapshot** action captures the matched line.
+3. If the rule's threshold is ≥ 5, an **escalate** action is generated.
+4. The rule enters a 60-second **throttle** cooldown, during which further matches are skipped.
+
+Thresholds are evaluated against a sliding time window: a rule only fires when the number of matches within `window_seconds` reaches `threshold`. The default threshold is 1 (fire on every match).
+
 ## API Reference
 
 | Module | Purpose |
 |--------|---------|
-| `agent.py` | Top-level `Agent` orchestrating sessions |
-| `watcher.py` | `LogWatcher` tailing log files |
-| `rule.py` | `AlertRule` with matching + thresholds |
-| `action.py` | `Action` types: notify, escalate, throttle, snapshot |
-| `session.py` | `MonitoringSession` with lifecycle + persistence |
+| `agent.py` | `Agent` — creates sessions and processes log lines |
+| `watcher.py` | `LogWatcher` — scans lines into `LogEntry` objects |
+| `rule.py` | `AlertRule` — pattern matching and threshold logic |
+| `action.py` | `Action` — action types: notify, escalate, throttle, snapshot |
+| `session.py` | `MonitoringSession` — lifecycle, throttle state, and JSON persistence |
 
 ## Testing
 
@@ -61,7 +72,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-## How It Fits
+## Scope
 
 - ✅ **Real today** — a standalone, zero-dependency log-monitoring toolkit. Every feature listed above (pattern matching, thresholds, throttling, escalation, snapshots, state persistence) is implemented and covered by the test suite.
 - 🔮 **Later phase** — integration with a broader `activelog` pipeline (e.g. a separate `activelog-backend` store, downstream analytics) and running as a PLATO fleet agent are aspirational directions, not anything present in this package today.
