@@ -66,6 +66,14 @@ pytest
 - ✅ **Real today** — a standalone, zero-dependency log-monitoring toolkit. Every feature listed above (pattern matching, thresholds, throttling, escalation, snapshots, state persistence) is implemented and covered by the test suite.
 - 🔮 **Later phase** — integration with a broader `activelog` pipeline (e.g. a separate `activelog-backend` store, downstream analytics) and running as a PLATO fleet agent are aspirational directions, not anything present in this package today.
 
+**Naming note (read before assuming a connection):** this package monitors
+*software log files* (server output, application logs). It shares the
+"ActiveLog" name with — but does **not** implement, depend on, or relate to —
+the ActiveLog timestamped *event-log format* designed in
+[SuperInstance/cocapn-foundation](https://github.com/SuperInstance/cocapn-foundation)
+(`activelog-spec`: the append-only, `(dev, seq)`-keyed voice/event envelope
+behind the Cocapn/DeckBoss line of work). Same word, two unrelated systems.
+
 ## License
 
 MIT
