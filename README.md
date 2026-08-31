@@ -2,6 +2,10 @@
 
 A standalone log-monitoring and alerting toolkit for Python. Define rules that match log lines by substring, regex, or exact text, then process log streams through them to produce notification, escalation, throttle, and snapshot actions. Pure Python, zero runtime dependencies.
 
+<p align="center">
+  <img src="assets/images/hero-watch-desk.jpg" width="680" alt="A watch desk of brass gauges in a dark chart room — one bell-lamp beginning to glow amber as its needle crosses the line">
+</p>
+
 ## Features
 
 - **Pattern matching** — substring, regex, and exact-match rules
